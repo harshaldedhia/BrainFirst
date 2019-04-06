@@ -1,12 +1,7 @@
 <?php
 session_start();
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
-
-$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -89,6 +84,7 @@ if(isset ($_POST['submit_assignment']))
     <link href="css/animate.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/home.css" rel="stylesheet">
+    <link href="css/ansassg.css" rel="stylesheet">
     <!-- color CSS you can use different color css from css/colors folder -->
     <!-- We have chosen the skin-blue (blue.css) for this starter
           page. However, you can choose any other skin from folder css / colors .
@@ -191,7 +187,7 @@ if(isset ($_POST['submit_assignment']))
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
@@ -214,10 +210,7 @@ if(isset ($_POST['submit_assignment']))
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="studentassignment.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Assignments Page</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Your Performances</span></a>
+                        <a href="studentassignment.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments Page</span></a>
                     </li>
                 </ul>
             </div>
@@ -259,20 +252,20 @@ if(isset ($_POST['submit_assignment']))
 						    </script>
 						</div><br>
 						<div style="padding-left: 70px; padding-right: 70px; float: left;">
-							<form action="answerassignment.php" method="POST" id="assignment" enctype="multipart/form-data">
+							<form class="form" action="answerassignment.php" method="POST" id="assignment" enctype="multipart/form-data">
 								<?php 
 									$q1 = "select * from assignment_ques where assignment_id='$assignment_id'";
 									$result = mysqli_query($con, $q1);
 									$row = mysqli_fetch_array($result);
 									echo '<div>';
-                                    echo '<a href="'.$row["question_path"].'" target="_blank">Click Here for Question</a>';
+                                    echo '<p><a href="'.$row["question_path"].'" target="_blank">Click Here for Question</a></p>';
                                     echo '</div>';
 								?>
-                                <div>
+                               
                                     <p> Submit Answer</p>
-                                    <input type="file" accept=".pdf" name="answer_file" id="answer_file">
+                                    <p><input type="file" accept=".pdf" name="answer_file" id="answer_file"></p><br><br>
 								    <button type="submit" name="submit_assignment" id="submit_assignment" >Submit Assignment</button>
-                                </div>
+                             
 							</form>
 						</div>
                     </div>

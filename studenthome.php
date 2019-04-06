@@ -1,12 +1,7 @@
 <?php
     session_start();
-$servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
-
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -14,6 +9,7 @@ $q = "select student_id,student_fname,student_lname from student where email='$e
 $result = mysqli_query($con, $q);
 $rows = mysqli_fetch_array($result);
 $student_id = $rows['student_id'];
+$_SESSION['student_id'] = $student_id;
 $student_fname = $rows['student_fname'];
 $student_lname = $rows['student_lname'];
 ?>
@@ -99,7 +95,7 @@ $student_lname = $rows['student_lname'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
@@ -122,10 +118,10 @@ $student_lname = $rows['student_lname'];
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="studenthome.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
+                        <a href="studenthome.php" class="waves-effect"><i class="fa fa-clipboard fa-fw" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
+                        <a href="profile.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
                     </li>
                 </ul>
             </div>
@@ -143,11 +139,11 @@ $student_lname = $rows['student_lname'];
                         <h4 class="course-name">Active Courses </h4> </div>
                     <!-- /.col-lg-12 -->
                 </div>	
-	
+	           <?php $curr_date = date('Y-m-d'); ?>
                 <div class="row" style="padding:10px">
         		    <?php
         			$email = $_SESSION['email'];
-        			$q = "select course_name,about,course.course_id from course,student,course_enrolled where (student.email='$email' AND student.student_id=course_enrolled.student_id AND course_enrolled.course_id=course.course_id AND whether_completed='No')";
+        			$q = "select course_name,about,course.course_id from course,student,course_enrolled where (student.email='$email' AND student.student_id=course_enrolled.student_id AND course_enrolled.course_id=course.course_id AND course.end_date>='$curr_date')";
         			$result = mysqli_query($con, $q);
                     $num = mysqli_num_rows($result);
                     if($num == 0)
@@ -178,7 +174,7 @@ $student_lname = $rows['student_lname'];
                 <div class="row" style="padding:10px">
                     <?php
         			$email = $_SESSION['email'];
-        			$q = "select course.course_name,about,course.course_id from course,student,course_enrolled where (student.email='$email' AND student.student_id=course_enrolled.student_id AND course_enrolled.course_id=course.course_id AND whether_completed='Yes')";
+        			$q = "select course.course_name,about,course.course_id from course,student,course_enrolled where (student.email='$email' AND student.student_id=course_enrolled.student_id AND course_enrolled.course_id=course.course_id AND course.end_date<'$curr_date')";
         			$result = mysqli_query($con, $q);
                     $num = mysqli_num_rows($result);
                     if($num == 0)
@@ -191,7 +187,12 @@ $student_lname = $rows['student_lname'];
         				echo '<div class="col-md-12">';
                         echo '<div class="white-box" style="padding:30px">
                             <h3 class="title"><form action="studentcoursepage.php" method="post"><input type = "hidden" name = "course_id" value = '.$rows["course_id"].'><button class="linkButton" type="submit">'.strtoupper($rows["course_name"]).'</button></form></h3>
-                            <p class="field">'.$rows["about"].'</p> </div>
+                            <p class="field">'.$rows["about"].'</p>
+                            <form action="certificate.php" method="POST">
+                            <input type = "hidden" name = "course_id" value = '.$rows["course_id"].'>
+                            <button type="submit" name="generate_certificate" class="btn btn-info" style="float:right" target="_blank" >Generate Certificate</button>
+                            </form>
+                            </div>
                             </div>';
         			}
 		    		?>

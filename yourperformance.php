@@ -1,7 +1,8 @@
 <?php 
 session_start();
 require("connection.php");
-
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
+header('location:index.php');
 $student_id = $_SESSION["student_id"];
 $course_id  =$_SESSION["course_id"];
 
@@ -154,10 +155,10 @@ $course_id  =$_SESSION["course_id"];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
-                        <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
+                        <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
                             <input type="text" placeholder="Search..." class="form-control" name="search_term"> <!--a href=""--><i class="fa fa-search"></i></a>
                         </form>
                     </li>
@@ -178,9 +179,6 @@ $course_id  =$_SESSION["course_id"];
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
                         <a href="studentquiz.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Quiz Page</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Your Performances</span></a>
                     </li>
                 </ul>
             </div>

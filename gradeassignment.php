@@ -1,12 +1,7 @@
 <?php
     session_start();
-        $servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
-
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+       require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='faculty')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -22,11 +17,26 @@ if(isset ($_POST['assignment_id']))
 }
 $assignment_id = $_SESSION['assignment_id'];
 
-$q = "SELECT * FROM assignment_ques WHERE assignment_id = '$assignment_id' ";
+$q = "SELECT * FROM assignment_ques WHERE assignment_id = $assignment_id ";
 $result = mysqli_query($con, $q);
 $row = mysqli_fetch_array($result);
 $about_assignment = $row['about_assignment'];
 $question_path = $row['question_path'];
+
+if(isset($_POST['save_changes']))
+{
+    $student_id_array=$_POST['s_id'];
+    $grade_array=$_POST['grade'];
+    for($i=0;$i<count($student_id_array);$i++)
+    {
+        $s_id = $student_id_array[$i];
+        $grade = $grade_array[$i];
+        $q = "UPDATE assignment_ans SET grade='$grade' WHERE student_id = '$s_id' AND assignment_id = '$assignment_id'";
+        mysqli_query($con,$q);
+    }
+    echo '<script>alert("Changes Saved Successfully !!!");
+            window.location.href="facultyassignment.php";</script>';
+}
 
 ?>
 
@@ -111,7 +121,7 @@ $question_path = $row['question_path'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
@@ -134,25 +144,7 @@ $question_path = $row['question_path'];
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="facultyhome.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Dashboard</span></a>
-                    </li>
-                    <li>
-                        <a href="facultycoursepage.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Course Home</span></a>
-                    </li>
-                    <li>
-                        <a href="faculty_content.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Content</span></a>
-                    </li>
-                    <li>
-                        <a href="facultyquiz.php" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz</span></a>
-                    </li>
-                    <li>
-                        <a href="facultyassignment.php" class="waves-effect"><i class="fa fa-font fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments</span></a>
-                    </li>
-                    <li>
-                        <a href="map-google.html" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i><span class="hide-menu">Discussion Forum</span></a>
-                    </li>
-                    <li>
-                        <a href="blank.html" class="waves-effect"><i class="fa fa-columns fa-fw" aria-hidden="true"></i><span class="hide-menu">Performances</span></a>
+                        <a href="facultyassignment.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments Page</span></a>
                     </li>
                 </ul>
             </div>
@@ -180,7 +172,7 @@ $question_path = $row['question_path'];
                     <!-- /.col-lg-12 -->
                 </div>
                     <?php
-                        $q = "select student_id,student_fname,student_lname,answer_path,grade from student,assignment_ans where (assignment_id='$assignment_id' AND student.student_id = assignment_ans.student_id) ";
+                        $q = "SELECT student.student_id,student_fname,student_lname,answer_path,grade FROM student,assignment_ans WHERE (student.student_id = assignment_ans.student_id AND assignment_id='$assignment_id') ";
                         $result = mysqli_query($con, $q);
                         $num = mysqli_num_rows($result);
                         if($num == 0)
@@ -191,22 +183,24 @@ $question_path = $row['question_path'];
                         else{
                             echo '<div class="col-md-12">';
                             echo '<div class="white-box" style="padding:30px">
-                                  <table>
+                                  <table class="table table-bordered">
                                   <tr>
                                     <th>Student Name</th>
                                     <th>Answer Submitted</th>
                                     <th>Grade</th>
                                   </tr>
                                   <form method="post" action="gradeassignment.php">';
-                        while($rows = mysqli_fetch_array($result)){
-                            echo'<tr>
-                                <td>'.$rows['student_fname'].$rows['student_lname'].'</td>
-                                <td><a href="'.$rows['answer_path'].'" target="_blank"></a></td>
-                                <td><input name="answer'.$rows['student_id'].'" value='.$rows['grade'].'>';
+                        while($rows = mysqli_fetch_array($result))
+                        {
+                            echo'<input name="s_id[]" value="'.$rows['student_id'].'" type="hidden">
+                                <tr>
+                                <td>'.$rows['student_fname']." ".$rows['student_lname'].'</td>
+                                <td><a href="'.$rows['answer_path'].'" target="_blank">Click Here</a></td>
+                                <td><input name="grade[]" type="text" value='.$rows['grade'].'>';
                                 
                         }
                         echo '</table> 
-                            <button type="submit" name="save_changes">Save Changes</button>
+                            <button type="submit" class="btn btn-info" name="save_changes">Save Changes</button>
                             </form>
                             </div>
                             </div>';

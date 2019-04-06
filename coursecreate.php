@@ -1,15 +1,10 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION["email"]))
+    if(!isset($_SESSION["email"])  or $_SESSION['usertype']!='faculty')
         header('location:index.php');
 $email = $_SESSION['email'];
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
-$con = mysqli_connect($servername, $username, $password, $dbname);
-
+require('connection.php');
 $q = "select faculty_id from faculty where email='$email'";
 $result = mysqli_query($con, $q);
 $rows = mysqli_fetch_array($result);
@@ -111,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">

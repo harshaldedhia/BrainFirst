@@ -1,33 +1,24 @@
 <?php
 session_start();
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
+require("connection.php");
 
-$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
 
 $email = $_SESSION['email'];
 $course_id = $_SESSION["course_id"];
 $quiz_id = $_POST['quiz_id'];
-
-$q = "select student_id from student where email='$email'";
-$result = mysqli_query($con, $q);
-$rows = mysqli_fetch_array($result);
-$student_id = $rows['student_id'];
-$_SESSION['student_id'] = $student_id;
+$student_id = $_SESSION['student_id'];
 $_SESSION['quiz_id'] = $quiz_id;
 
-$q = "select student_id,quiz_id from quiz_ans where student_id='$student_id' AND quiz_id='$quiz_id'";
+$q = "select * from quiz_ans where student_id='$student_id' AND quiz_id='$quiz_id'";
 $result = mysqli_query($con, $q);
 $rows = mysqli_fetch_array($result);
 $num = mysqli_num_rows($result);
 if($num>0)
 {
-	echo '<script>alert("You have already attended this quiz.");</script>';
-	header('location:studentquiz.php');
+	echo '<script>alert("You have already attended this quiz.");
+        window.location.href="studentquiz.php";</script>';
 }
 else
 {
@@ -162,10 +153,10 @@ else
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
-                        <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
+                        <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
                             <input type="text" placeholder="Search..." class="form-control" name="search_term"> <!--a href=""--><i class="fa fa-search"></i></a>
                         </form>
                     </li>
@@ -186,12 +177,6 @@ else
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
                         <a href="studentquiz.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Quizzes Page</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz Page</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Your Performances</span></a>
                     </li>
                 </ul>
             </div>
@@ -228,7 +213,6 @@ else
 								        document.getElementById("divCounter").innerHTML = "EXPIRED";
 								        alert("Time is up!");
                                         document.getElementById("quiz").submit();
-										window.location="addanswers.php";
 								    }
 								}, 1000);	
 						    </script>
@@ -274,12 +258,6 @@ else
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
 
-    <script type="text/javascript">
-        function form_submit() {
-            document.getElementById("form_id").submit();// Form submission
-        }
-
-    </script>
 </body>
 
 </html>

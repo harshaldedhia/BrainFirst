@@ -1,12 +1,7 @@
 <?php
     session_start();
-$servername = "127.0.0.1";
-        $username = "root";
-        $password = "";
-        $dbname = "brainfirst";
-
-        $con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
 if(isset($_POST['search_term'])){
     $_SESSION['search_term'] = $_POST['search_term'];
@@ -89,7 +84,7 @@ $email = $_SESSION['email'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
@@ -115,8 +110,8 @@ $email = $_SESSION['email'];
                         <a href="studenthome.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
-                    </li>
+                        <a href="profile.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
+                    </li><!--
                     <li>
                         <a href="basic-table.html" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i><span class="hide-menu">Basic Table</span></a>
                     </li>
@@ -131,7 +126,7 @@ $email = $_SESSION['email'];
                     </li>
                     <li>
                         <a href="404.html" class="waves-effect"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i><span class="hide-menu">Error 404</span></a>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>

@@ -1,26 +1,15 @@
 <?php
 
 session_start();
+require('connection.php');
+if(isset($_SESSION['email']) && isset($_SESSION['usertype'])){
+	header('location:'.$_SESSION["usertype"].'home.php');
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
 	if(isset($_POST['signin']))
 	{
-		$servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
-
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-
-		if($con == NULL){
-			echo" connection failed";
-		}
-		else{
-			echo " connection"; 
-		}
-		//mysqli_select_db($con, 'brainfirst');
-
 		$email = $_POST["email"];
 		$password = $_POST["password"];
 		$password = $con->real_escape_string($password);
@@ -152,14 +141,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         </ol>
         <div class="carousel-inner" role="listbox">
           <!-- Slide One - Set the background image for this slide in the line below -->
-          <div class="carousel-item active" style="background-image: url('https://images.pexels.com/photos/582428/pexels-photo-582428.jpeg?cs=srgb&dl=adult-blur-break-582428.jpg&fm=jpg')">
+          <div class="carousel-item active" style="background-image: url(img/banner1dark.jpg)">
             <!--<div class="carousel-caption d-none d-md-block"
               <h1>BrainFirst</h1>
               <p>A revolution in learning, the evolution of you.</p>
-            </div>--><br><br><br><br><br><br><br><br><br>
+            </div>--><br><br><br><br><br><br><br>
             <div class="banner-content col-lg-02 col-md-02 justify-content-center"><br><br>
 							<h1>
-								BrainFirst			
+								<img src='img/bn2.png'></img>			
 							</h1>
 						
 							<h6 class="text-uppercase">A revolution in learning, the evolution of you.</h6><br>
@@ -167,14 +156,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 						</div>											
           </div>
           <!-- Slide Two - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('https://images.unsplash.com/1/type-away-numero-dos.jpg?ixlib=rb-0.3.5&s=d638756e44897cfc16dc0d4c82c2a986&auto=format&fit=crop&w=1050&q=80')">
+          <div class="carousel-item" style="background-image: url(img/banner2.jpg)">
             <div class="carousel-caption d-none d-md-block justify-content-center">
               <h1 class="banner content h1">Quality Learning</h1>
               <p>professors across the globe to help you learn variety of subjects</p>
             </div>
           </div>
           <!-- Slide Three - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=73c00aaa6d23115d7fbe494c0cc1e5e3&auto=format&fit=crop&w=1500&q=80')">
+          <div class="carousel-item" style="background-image: url(img/banner3.jpg)">
             <div class="carousel-caption d-none d-md-block">
               <h1 class="banner content h1" >Learning made simple</h1>
               <p>All university students welcomed </p>

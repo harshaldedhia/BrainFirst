@@ -1,13 +1,8 @@
 <?php
 session_start();
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
+require('connection.php');
 
-$con = mysqli_connect($servername, $username, $password, $dbname);
-
-if(!isset($_SESSION["email"]))
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='faculty')
 header('location:index.php');
 
 $email = $_SESSION["email"];
@@ -124,7 +119,7 @@ $course_id = $_SESSION['course_id'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
@@ -150,22 +145,19 @@ $course_id = $_SESSION['course_id'];
                         <a href="facultyhome.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="facultyhome.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Course Home</span></a>
+                        <a href="" class="waves-effect"><i class="fa fa-home fa-fw" aria-hidden="true"></i><span class="hide-menu">Course Home</span></a>
                     </li>
                     <li>
-                        <a href="faculty_content.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Content</span></a>
+                        <a href="faculty_content.php" class="waves-effect"><i class="fa fa-file fa-fw" aria-hidden="true"></i><span class="hide-menu">Content</span></a>
                     </li>
                     <li>
-                        <a href="facultyquiz.php" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz</span></a>
+                        <a href="facultyquiz.php" class="waves-effect"><i class="fa fa-check fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz</span></a>
                     </li>
                     <li>
-                        <a href="facultyassignment.php" class="waves-effect"><i class="fa fa-font fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments</span></a>
+                        <a href="facultyassignment.php" class="waves-effect"><i class="fa fa-edit fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments</span></a>
                     </li>
                     <li>
-                        <a href="map-google.html" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i><span class="hide-menu">Discussion Forum</span></a>
-                    </li>
-                    <li>
-                        <a href="blank.html" class="waves-effect"><i class="fa fa-columns fa-fw" aria-hidden="true"></i><span class="hide-menu">Performances</span></a>
+                        <a href="facultydiscussionforum.php" class="waves-effect"><i class="fa fa-question fa-fw" aria-hidden="true"></i><span class="hide-menu">Discussion Forum</span></a>
                     </li>
                 </ul>
             </div>

@@ -1,7 +1,8 @@
 <?php
 session_start();
 require("connection.php");
-
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='faculty')
+header('location:index.php');
 $email = $_SESSION['email'];
 $course_id = $_SESSION["course_id"];
 $q = "select course_name from course where course_id='$course_id'";
@@ -158,7 +159,7 @@ $faculty_id = $_SESSION['faculty_id'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">

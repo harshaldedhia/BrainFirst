@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.2
+-- version 4.8.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2018 at 11:46 AM
--- Server version: 10.1.34-MariaDB
--- PHP Version: 5.6.37
+-- Generation Time: Oct 18, 2018 at 04:38 PM
+-- Server version: 10.1.33-MariaDB
+-- PHP Version: 7.2.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -35,6 +35,14 @@ CREATE TABLE `assignment_ans` (
   `grade` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `assignment_ans`
+--
+
+INSERT INTO `assignment_ans` (`student_id`, `assignment_id`, `answer_path`, `grade`) VALUES
+(3, 7, 'assignment_ans/7_3.pdf', 'A'),
+(3, 8, 'assignment_ans/8_3.pdf', 'A');
+
 -- --------------------------------------------------------
 
 --
@@ -54,9 +62,9 @@ CREATE TABLE `assignment_ques` (
 --
 
 INSERT INTO `assignment_ques` (`course_id`, `assignment_id`, `about_assignment`, `question_path`, `due_date`) VALUES
-(5, 1, 'Test', 'assignment_ques/5_Test.pdf', '2018-09-21 18:30:00'),
-(5, 2, 'test2', 'assignment_ques/5_test2.pdf', '2018-09-28 22:26:00'),
-(5, 3, 'test3', 'assignment_ques/5_test3.pdf', '2018-09-21 10:30:00');
+(8, 7, 'Searching Methods Assignment', 'assignment_ques/8_Searching_Methods_Assignment.pdf', '2018-10-11 16:30:00'),
+(9, 8, 'Assignment1', 'assignment_ques/9_Assignment1.pdf', '2018-10-12 06:30:00'),
+(9, 9, 'Assignment2', 'assignment_ques/9_Assignment2.pdf', '2018-10-20 18:29:00');
 
 -- --------------------------------------------------------
 
@@ -79,11 +87,9 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`course_id`, `faculty_id`, `course_name`, `start_date`, `end_date`, `about`, `syllabus_path`) VALUES
-(1, 2, 'JAVA', '2018-09-01', '2018-09-30', 'Basics of JAVA', 'syllabus/2_JAVA.docx'),
-(2, 2, 'Python', '2018-10-01', '2018-10-31', 'Here, you will learn the basics of Python programming language.', 'syllabus/2_Python.docx'),
-(3, 2, 'WT', '2018-09-15', '2018-10-15', 'uu', ' syllabus/2_WT.docx'),
-(4, 3, 'Android App Development', '2018-09-15', '2018-10-15', 'Just an introduction to app development using Android Studio', ' syllabus/3_Android_App_Development.pdf'),
-(5, 3, 'Machine Learning', '2018-11-01', '2018-12-16', 'Here, you will the basics of Machine Learning along with a few algorithms', ' syllabus/3_Machine_Learning.pdf');
+(7, 3, 'Data Structures', '2018-10-01', '2018-10-31', 'This course will introduce the core data structures of the Python programming language. We will move past the basics of procedural programming and explore how we can use the Python built-in data structures such as lists, dictionaries, and tuples to perform increasingly complex data analysis.', ' syllabus/3_Data_Structures.pdf'),
+(8, 3, 'Analysis of Algorithm', '2018-09-01', '2018-10-11', 'Learn Analysis of Algorithm using asymptotic notations like Big Oh and others. Understand and analyse sorting algorithms', ' syllabus/3_Analysis_of_Algorithm.pdf'),
+(9, 3, 'ETHICAL HACKING', '2018-08-01', '2018-10-31', 'This course will train you on the advanced step-by-step methodologies that hackers actually use, such as writing virus codes, and reverse engineering, so you can better protect corporate infrastructure from data breaches. Youâ€™ll master advanced network packet analysis, securing web servers, malware threats, and advanced system penetration testing techniques to build your network security skillset and beat hackers at their own game.', ' syllabus/3_ETHICAL_HACKING.pdf');
 
 -- --------------------------------------------------------
 
@@ -103,9 +109,12 @@ CREATE TABLE `course_content` (
 --
 
 INSERT INTO `course_content` (`course_id`, `file_path`, `time`, `file_type`) VALUES
-(5, 'content/5_1611011-(ADBMS-EXP3).pdf', '2018-09-20 05:51:17', 'Document'),
-(5, 'content/5_movie.mp4', '2018-09-21 08:20:37', 'Video'),
-(5, 'content/5_venom-trailer-1_h720p.mov', '2018-09-20 13:17:36', 'Video');
+(8, 'content/8_1611011-(ADBMS-EXP3).pdf', '2018-10-11 16:12:21', 'Document'),
+(8, 'content/8_movie.mp4', '2018-10-11 16:11:56', 'Video'),
+(9, 'content/9_ETHICAL_HACKING.pdf', '2018-10-12 03:46:04', 'Document'),
+(9, 'content/9_ETHICAL_HACKING_1.mp4', '2018-10-12 03:45:31', 'Video'),
+(9, 'content/9_ETHICAL_HACKING_2.mp4', '2018-10-12 03:45:43', 'Video'),
+(9, 'content/9_ETHICAL_HACKING_2.pdf', '2018-10-12 03:46:17', 'Document');
 
 -- --------------------------------------------------------
 
@@ -115,20 +124,17 @@ INSERT INTO `course_content` (`course_id`, `file_path`, `time`, `file_type`) VAL
 
 CREATE TABLE `course_enrolled` (
   `student_id` int(11) NOT NULL,
-  `course_id` int(11) NOT NULL,
-  `whether_completed` varchar(4) DEFAULT NULL,
-  `grade` varchar(5) DEFAULT NULL
+  `course_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `course_enrolled`
 --
 
-INSERT INTO `course_enrolled` (`student_id`, `course_id`, `whether_completed`, `grade`) VALUES
-(1, 1, 'No', NULL),
-(1, 2, 'No', NULL),
-(1, 5, 'No', NULL),
-(3, 4, 'No', NULL);
+INSERT INTO `course_enrolled` (`student_id`, `course_id`) VALUES
+(1, 8),
+(3, 8),
+(3, 9);
 
 -- --------------------------------------------------------
 
@@ -141,8 +147,18 @@ CREATE TABLE `discussion_forum_ans` (
   `thread_id` int(11) NOT NULL,
   `user_type` varchar(10) NOT NULL,
   `id` int(11) NOT NULL,
-  `answer` text NOT NULL
+  `answer` text NOT NULL,
+  `post_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `discussion_forum_ans`
+--
+
+INSERT INTO `discussion_forum_ans` (`course_id`, `thread_id`, `user_type`, `id`, `answer`, `post_time`) VALUES
+(8, 34, 'faculty', 3, 'Quick Sort has an average case time complexity of O(n logn) while selection sort has an average time of O(n^2).', '2018-10-11 16:29:14'),
+(8, 34, 'student', 1, 'Everything is better than selection sort !!!', '2018-10-11 16:27:45'),
+(9, 35, 'faculty', 3, 'Message repudiation means a sender can claim they did not actually send a particular message.A quality that prevents a third party from being able to prove that a communication between two other parties ever took place. This is a desirable quality if you do not want your communications to be traceable. Non-repudiation is the opposite quality-a third party can prove that a communication between two other parties took place. Non-repudiation is desirable if you want to be able to trace your communications and prove that they occurred. Repudiation - Denial of message submission or delivery.', '2018-10-12 03:52:19');
 
 -- --------------------------------------------------------
 
@@ -154,8 +170,17 @@ CREATE TABLE `discussion_forum_ques` (
   `course_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   `thread_id` int(11) NOT NULL,
-  `question` varchar(500) NOT NULL
+  `question` varchar(500) NOT NULL,
+  `post_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `discussion_forum_ques`
+--
+
+INSERT INTO `discussion_forum_ques` (`course_id`, `student_id`, `thread_id`, `question`, `post_time`) VALUES
+(8, 3, 34, 'How is quick sort better than selection sort ?', '2018-10-11 16:26:23'),
+(9, 3, 35, 'To which concept in realm of email security does \"message repudiation\" refer to?', '2018-10-12 03:51:41');
 
 -- --------------------------------------------------------
 
@@ -167,17 +192,18 @@ CREATE TABLE `faculty` (
   `faculty_id` int(11) NOT NULL,
   `faculty_fname` varchar(50) NOT NULL,
   `faculty_lname` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `about_yourself` varchar(500) DEFAULT NULL,
+  `university` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `faculty`
 --
 
-INSERT INTO `faculty` (`faculty_id`, `faculty_fname`, `faculty_lname`, `email`) VALUES
-(1, 'FNAME', 'LNAME', 'faculty@somaiya.edu'),
-(2, 'XYZ', 'PQR', 'xyz@somaiya.edu'),
-(3, 'Harshal', 'Dedhia', 'harshal.ad@somaiya.edu');
+INSERT INTO `faculty` (`faculty_id`, `faculty_fname`, `faculty_lname`, `email`, `about_yourself`, `university`) VALUES
+(2, 'XYZ', 'PQR', 'xyz@somaiya.edu', NULL, NULL),
+(3, 'Harshal', 'Dedhia', 'harshal.ad@somaiya.edu', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -197,7 +223,6 @@ CREATE TABLE `login_info` (
 
 INSERT INTO `login_info` (`email`, `password`, `usertype`) VALUES
 ('abc@somaiya.edu', 'abcd', 'student'),
-('faculty@somaiya.edu', 'password', 'faculty'),
 ('gandhi.hk@somaiya.edu', 'harsh', 'student'),
 ('harshal.ad@somaiya.edu', 'harshal', 'faculty'),
 ('narayan.ghogale@somaiya.edu', 'narayan', 'student'),
@@ -216,6 +241,22 @@ CREATE TABLE `quiz_ans` (
   `answer` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `quiz_ans`
+--
+
+INSERT INTO `quiz_ans` (`student_id`, `quiz_id`, `ques_num`, `answer`) VALUES
+(3, 2, 1, 'b'),
+(3, 2, 2, 'b'),
+(3, 2, 3, 'd'),
+(3, 2, 4, 'c'),
+(3, 2, 5, 'd'),
+(3, 3, 1, 'c'),
+(3, 3, 2, 'a'),
+(3, 3, 3, 'a'),
+(3, 3, 4, 'a'),
+(3, 3, 5, 'a');
+
 -- --------------------------------------------------------
 
 --
@@ -228,6 +269,14 @@ CREATE TABLE `quiz_grade` (
   `quiz_id` int(11) NOT NULL,
   `grade` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quiz_grade`
+--
+
+INSERT INTO `quiz_grade` (`course_id`, `student_id`, `quiz_id`, `grade`) VALUES
+(8, 3, 2, 'A'),
+(9, 3, 3, 'F');
 
 -- --------------------------------------------------------
 
@@ -248,8 +297,8 @@ CREATE TABLE `quiz_info` (
 --
 
 INSERT INTO `quiz_info` (`quiz_id`, `course_id`, `start_timestamp`, `end_timestamp`, `about_quiz`) VALUES
-(1, 5, '2018-09-18 18:42:00', '2018-09-21 18:42:00', 'baiscsml'),
-(2, 5, '2018-09-18 18:42:00', '2018-09-28 06:42:00', '1wdadasd');
+(2, 8, '2018-10-11 16:00:00', '2018-10-11 16:30:00', 'Sorting Analysis'),
+(3, 9, '2018-10-12 04:00:00', '2018-10-12 04:30:00', 'Quiz 1');
 
 -- --------------------------------------------------------
 
@@ -268,6 +317,22 @@ CREATE TABLE `quiz_ques` (
   `correct_answer` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `quiz_ques`
+--
+
+INSERT INTO `quiz_ques` (`quiz_id`, `ques_num`, `question`, `option_a`, `option_b`, `option_c`, `option_d`, `correct_answer`) VALUES
+(2, 1, 'Time Complexity of Selection Sort', 'O(n^3)', 'O(n^2)', 'O(n logn)', 'O(n)', 'b'),
+(2, 2, 'Time Complexity of Quick Sort', 'O(1)', 'O(n^2)', 'O(n logn)', 'O(n)', 'b'),
+(2, 3, 'Time Complexity of Merge Sort', 'O(1)', 'O(n^2)', 'O(n)', 'O(n logn)', 'd'),
+(2, 4, 'Best case time complexity of insertion sort', 'O(1)', 'O(n^2)', 'O(n)', 'O(n logn)', 'c'),
+(2, 5, 'Which has the worst space complexity ?', 'Selection Sort', 'Quick Sort', 'Insertion Sort', 'Merge Sort', 'd'),
+(3, 1, 'Which of the following is the default port for MySQL? ', '5432', '1433', '3306', '1521', 'c'),
+(3, 2, 'Within HTTP, which header includes the URL of the web page containing the link that initiated the current request?', 'User-Agent', 'Referer', 'Post', 'Host', 'd'),
+(3, 3, 'Precomputed hashes that are intended to contain every possible combination of characters for the purpose of comparing them against a captured password are known as which of the following?', 'Water Lillies', 'Dictionaries', 'Salt Mines', 'Rainbow Tables', 'd'),
+(3, 4, 'Within Windows, which log class stores events from remote hosts?', 'Forwarded events log', 'System log', 'Remote log', 'Methods log', 'a'),
+(3, 5, 'The default Time-To-Live (TTL) value for IP packets differs based on operating system. What is the default TTL value in Windows?', '32', '255', '128', '64', 'd');
+
 -- --------------------------------------------------------
 
 --
@@ -278,17 +343,19 @@ CREATE TABLE `student` (
   `student_id` int(11) NOT NULL,
   `student_fname` varchar(50) NOT NULL,
   `student_lname` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `about_yourself` varchar(500) DEFAULT NULL,
+  `university` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`student_id`, `student_fname`, `student_lname`, `email`) VALUES
-(1, 'ABC', 'DEF', 'abc@somaiya.edu'),
-(3, 'Harsh', 'Gandhi', 'gandhi.hk@somaiya.edu'),
-(4, 'Narayan', 'Ghogale', 'narayan.ghogale@somaiya.edu');
+INSERT INTO `student` (`student_id`, `student_fname`, `student_lname`, `email`, `about_yourself`, `university`) VALUES
+(1, 'ABC', 'DEF', 'abc@somaiya.edu', '', 'Mumbai University'),
+(3, 'Harsh', 'Gandhi', 'gandhi.hk@somaiya.edu', NULL, NULL),
+(4, 'Narayan', 'Ghogale', 'narayan.ghogale@somaiya.edu', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -400,19 +467,19 @@ ALTER TABLE `student`
 -- AUTO_INCREMENT for table `assignment_ques`
 --
 ALTER TABLE `assignment_ques`
-  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `discussion_forum_ques`
 --
 ALTER TABLE `discussion_forum_ques`
-  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `faculty`
@@ -424,7 +491,7 @@ ALTER TABLE `faculty`
 -- AUTO_INCREMENT for table `quiz_info`
 --
 ALTER TABLE `quiz_info`
-  MODIFY `quiz_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `quiz_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `student`
@@ -467,6 +534,12 @@ ALTER TABLE `course_content`
 ALTER TABLE `course_enrolled`
   ADD CONSTRAINT `enrolled_course_fk` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `enrolled_student_fk` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `discussion_forum_ans`
+--
+ALTER TABLE `discussion_forum_ans`
+  ADD CONSTRAINT `thread_id_fk` FOREIGN KEY (`thread_id`) REFERENCES `discussion_forum_ques` (`thread_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `discussion_forum_ques`

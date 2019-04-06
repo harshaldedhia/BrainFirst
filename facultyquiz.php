@@ -1,12 +1,8 @@
 <?php
-    session_start();
-        $servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
+session_start();
+require("connection.php");
 
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='faculty')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -91,7 +87,7 @@ $course_name = $rows['course_name'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
@@ -114,13 +110,11 @@ $course_name = $rows['course_name'];
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="facultycoursepage.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to CourseHome</span></a>
+                        <a href="studentcoursepage.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to CourseHome</span></a>
                     </li>
+                    
                     <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz Page</span></a>
-                    </li>
-                    <li>
-                        <a href="addquiz.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Add a Quiz</span></a>
+                        <a href="viewperformance.php" class="waves-effect"><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i><span class="hide-menu">View Performances</span></a>
                     </li>
                 </ul>
             </div>
@@ -142,18 +136,18 @@ $course_name = $rows['course_name'];
                         </div>';
                     ?>
                     
-                </div>
+                </div><!--
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <h4 class="course-name">Recent Quizzes </h4> </div>
-                    <!-- /.col-lg-12 -->
+                    <!-- /.col-lg-12 
                 </div>
                 <div class="row" style="padding:10px">
                     <?php
         			
         		    ?>
                     
-                </div>
+                </div>-->
             </div>
             <!-- /.container-fluid -->
             <!-- /.container-fluid -->

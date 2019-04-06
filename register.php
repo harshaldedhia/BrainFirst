@@ -1,25 +1,14 @@
 <?php
 
 session_start();
+require('connection.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
 	if(isset($_POST['signup']))
 	{
 
-		$servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
-
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-
-		if($con == NULL){
-			echo" connection failed";
-		}
-
-		//mysqli_select_db($con, 'website');
-
+		
 		$fname = $_POST['fname'];
 		$fname = $con->real_escape_string($fname);
 		$lname = $_POST['lname'];
@@ -56,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$q2= "insert  into student(student_fname , student_lname, email) values ('$fname' , '$lname', '$email') ";
 					mysqli_query($con, $q2);
 
-					$SESSION['email'] =  $email;
+					$_SESSION['email'] =  $email;
+					$_SESSION['usertype'] = $usertype;
 					echo "<script>
 						alert('Successfully created account.');
 						window.location.href='studenthome.php';
@@ -67,7 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 					$q2= "insert  into faculty(faculty_fname , faculty_lname, email) values ('$fname' , '$lname', '$email') ";
 					mysqli_query($con, $q2);
 
-					$SESSION['email'] =  $email;
+					$_SESSION['email'] =  $email;
+					$_SESSION['usertype'] = $usertype;
 					echo "<script>
 						alert('Successfully created account.');
 						window.location.href='facultyhome.php';

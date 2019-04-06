@@ -1,20 +1,20 @@
 <?php
 session_start();
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
-
-$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require("connection.php");
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
-
 $email = $_SESSION['email'];
 $course_id = $_SESSION["course_id"];
 $q = "select course_name from course where course_id='$course_id'";
 $result = mysqli_query($con, $q);
 $rows = mysqli_fetch_array($result);
 $course_name = $rows['course_name'];
+
+$q = "select student_id from student where email='$email'";
+$result = mysqli_query($con, $q);
+$rows = mysqli_fetch_array($result);
+$student_id = $rows['student_id'];
+$_SESSION['student_id'] = $student_id;
 
 ?>
 
@@ -141,10 +141,10 @@ $course_name = $rows['course_name'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
-                        <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
+                        <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
                             <input type="text" placeholder="Search..." class="form-control" name="search_term"> <!--a href=""--><i class="fa fa-search"></i></a>
                         </form>
                     </li>
@@ -166,11 +166,9 @@ $course_name = $rows['course_name'];
                     <li style="padding: 10px 0 0;">
                         <a href="studentcoursepage.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to CourseHome</span></a>
                     </li>
+                    
                     <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz Page</span></a>
-                    </li>
-                    <li>
-                        <a href="#" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Your Performances</span></a>
+                        <a href="yourperformance.php" class="waves-effect"><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i><span class="hide-menu">Your Performances</span></a>
                     </li>
                 </ul>
             </div>
@@ -190,8 +188,8 @@ $course_name = $rows['course_name'];
                 </div>
                 <div class="row" style="padding:10px">
                     <?php
-                        $current_time = date('Y/m/d h:i:s', time());
-                        $q = "select * from quiz_info where (course_id='$course_id' AND start_timestamp<'$current_time' AND end_timestamp>'$current_time')";
+                        //$current_time = date('Y/m/d h:i:s', time());
+                        $q = "select * from quiz_info where (course_id='$course_id' AND start_timestamp<CURRENT_TIMESTAMP AND end_timestamp>CURRENT_TIMESTAMP and quiz_id NOT IN(SELECT quiz_id FROM quiz_ans WHERE student_id='$student_id'))";
                         $result = mysqli_query($con, $q);
                         $num = mysqli_num_rows($result);
                         if($num == 0)
@@ -220,7 +218,7 @@ $course_name = $rows['course_name'];
                 <div class="row" style="padding:10px">
                     <?php
 
-                        $q = "select * from quiz_info where course_id='$course_id' AND start_timestamp>'$current_time' AND end_timestamp>'$current_time'";
+                        $q = "select * from quiz_info where course_id='$course_id' AND start_timestamp>CURRENT_TIMESTAMP AND end_timestamp>CURRENT_TIMESTAMP";
                         $result = mysqli_query($con, $q);
                         $num = mysqli_num_rows($result);
                         if($num == 0)
@@ -230,7 +228,8 @@ $course_name = $rows['course_name'];
                         }
                         while($rows = mysqli_fetch_array($result))
                         {
-                            $date1 = new DateTime($current_time);
+                        	//$current_time = date('CURRENT_TIMESTAMP',time());
+                            $date1 = new DateTime();
                             $starttime = new DateTime($rows['start_timestamp']);
                             $remaining_time = $starttime->diff($date1);
                             $elapsed = $remaining_time->format(' %a days %h hours %i minutes %s seconds');

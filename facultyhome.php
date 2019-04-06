@@ -1,12 +1,7 @@
 <?php
     session_start();
-        $servername = "127.0.0.1";
-		$username = "root";
-		$password = "";
-		$dbname = "brainfirst";
-
-		$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='faculty')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -14,6 +9,7 @@ $q = "select faculty_id,faculty_fname,faculty_lname from faculty where email='$e
 $result = mysqli_query($con, $q);
 $rows = mysqli_fetch_array($result);
 $faculty_id = $rows['faculty_id'];
+$_SESSION['faculty_id'] = $faculty_id;
 $faculty_fname = $rows['faculty_fname'];
 $faculty_lname = $rows['faculty_lname'];
 ?>
@@ -99,11 +95,11 @@ $faculty_lname = $rows['faculty_lname'];
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home"></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="faculty_searchcourses.php">
-                            <input type="text" placeholder="Search..." class="form-control" name="search_term"> <!--a href=""--><i class="fa fa-search"></i></a>
+                            <input type="text" placeholder="Search..." class="form-control" name="search_term"> <!--a href=""--><i class="fa fa-search"></i>
                         </form>
                     </li>
                 </ul>
@@ -122,10 +118,10 @@ $faculty_lname = $rows['faculty_lname'];
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="facultyhome.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
+                        <a href="" class="waves-effect"><i class="fa fa-clipboard fa-fw" aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
+                        <a href="profile.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Profile</span></a>
                     </li>
                     <li>
                         <a href="coursecreate.php" class="waves-effect"><i class="fa fa-plus fa-fw" aria-hidden="true"></i><span class="hide-menu">Add Course</span></a>
@@ -181,7 +177,7 @@ $faculty_lname = $rows['faculty_lname'];
                 <div class="row" style="padding:10px">
                     <?php
                     $date = date('Y-m-d');
-                    $q = "select course_name,about,course.course_id from course,faculty where (course.faculty_id='$faculty_id' AND end_date<'$date')";
+                    $q = "select course_name,about,course_id from course where (course.faculty_id='$faculty_id' AND end_date<'$date')";
                     $result = mysqli_query($con, $q);
                     $num = mysqli_num_rows($result);
                     if($num == 0)

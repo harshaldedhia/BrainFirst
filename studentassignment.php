@@ -1,12 +1,7 @@
 <?php
 session_start();
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "brainfirst";
-
-$con = mysqli_connect($servername, $username, $password, $dbname);
-if(!isset($_SESSION["email"]))
+require('connection.php');
+if(!isset($_SESSION["email"]) or $_SESSION['usertype']!='student')
 header('location:index.php');
 
 $email = $_SESSION['email'];
@@ -134,6 +129,31 @@ $_SESSION['student_id'] = $student_id;
      text-decoration: none;
      cursor: pointer; 
     }
+
+    .myBox {
+        padding:50px; 
+        background: white;
+        height: auto;
+        overflow: auto;
+        text-align: center;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: center;
+        padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+        background-color: #85B4D2;
+        color: white;
+    }
     </style>
 </head>
 
@@ -146,7 +166,7 @@ $_SESSION['student_id'] = $student_id;
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
-                <div class="top-left-part"><a class="logo" href="index.php"><b><!--img src="img/brainfirst-logo.png" alt="home" /--></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
+                <div class="top-left-part"><a class="logo" href="index.php"><b><img src="img/25.png" alt="home" /></b><span class="hidden-xs"><!--img src="img/brainfirst-text.png" alt="home" /--></span></a></div>
                 <ul class="nav navbar-top-links navbar-left m-l-20 hidden-xs">
                     <li>
                         <form role="search" class="app-search hidden-xs" method="post" action="student_searchcourses.php">
@@ -172,22 +192,22 @@ $_SESSION['student_id'] = $student_id;
                         <a href="studenthome.php" class="waves-effect"><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i><span class="hide-menu">Back to Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="studentcoursepage.php" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><span class="hide-menu">Course Home</span></a>
+                        <a href="studentcoursepage.php" class="waves-effect"><i class="fa fa-home fa-fw" aria-hidden="true"></i><span class="hide-menu">Course Home</span></a>
                     </li>
                     <li>
-                        <a href="student_content.php" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i><span class="hide-menu">Content</span></a>
+                        <a href="student_content.php" class="waves-effect"><i class="fa fa-file fa-fw" aria-hidden="true"></i><span class="hide-menu">Content</span></a>
                     </li>
                     <li>
-                        <a href="studentquiz.php" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz</span></a>
+                        <a href="studentquiz.php" class="waves-effect"><i class="fa fa-check fa-fw" aria-hidden="true"></i><span class="hide-menu">Quiz</span></a>
                     </li>
                     <li>
-                        <a href="studentassignment.php" class="waves-effect"><i class="fa fa-font fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments</span></a>
+                        <a href="" class="waves-effect"><i class="fa fa-edit fa-fw" aria-hidden="true"></i><span class="hide-menu">Assignments</span></a>
                     </li>
                     <li>
-                        <a href="map-google.html" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i><span class="hide-menu">Discussion Forum</span></a>
+                        <a href="studentdiscussionforum.php" class="waves-effect"><i class="fa fa-question fa-fw" aria-hidden="true"></i><span class="hide-menu">Discussion Forum</span></a>
                     </li>
                     <li>
-                        <a href="blank.html" class="waves-effect"><i class="fa fa-columns fa-fw" aria-hidden="true"></i><span class="hide-menu">Performances</span></a>
+                        <a href="studentgrade.php" class="waves-effect"><i class="fa fa-line-chart fa-fw" aria-hidden="true"></i><span class="hide-menu">Grades</span></a>
                     </li>
                 </ul>
             </div>
@@ -200,13 +220,14 @@ $_SESSION['student_id'] = $student_id;
                     <h4 class="course-name" style="font-size: 22px">Assignments for <?php echo $course_name;?></h4> 
                     <!-- /.col-lg-12 -->
                 </div>
+
+                <!--Pendng assignments -->
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <h4 class="course-name">Pending Assignments </h4> </div>
                     <!-- /.col-lg-12 -->
                 </div>
-                <?php 
-                                ?>
+
                 <div class="row" style="padding:10px">
                     <?php
                         $q = "select * from assignment_ques where (course_id='$course_id' AND due_date>CURRENT_TIMESTAMP AND assignment_id NOT IN(SELECT assignment_id FROM assignment_ans WHERE student_id = '$student_id'))";
@@ -229,7 +250,49 @@ $_SESSION['student_id'] = $student_id;
                         }                       
                     ?>
                 </div>
+
+                <!--Recent assignments -->
+                <div class="row bg-title">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <h4 class="course-name" style="width: 300px">Submitted Assignments </h4> </div>
+                    <!-- /.col-lg-12 -->
+                </div>
                 
+                <div class="row" style="padding:10px">
+                	<div class="myBox" >
+                    <?php
+                        $q = "select * from assignment_ans aa,assignment_ques aq where aa.student_id = '$student_id' AND aa.assignment_id=aq.assignment_id AND aq.course_id = '$course_id'";
+                        $result = mysqli_query($con, $q);
+                        $num = mysqli_num_rows($result);
+                        if($num == 0)
+                        {
+                            echo '<div class="white-box">
+                                <p class="field">No Recent Assignments submitted</p> </div>';
+                        }
+                        else
+                        {
+                        	echo '<table>';
+                                echo '<caption style="text-align: center; font-size: 20px">Your Performances</caption>';
+                                echo '<tr>
+                                    <th>Assignment</th>
+                                    <th>Your Grade</th>
+                                </tr>';
+                            while($row = mysqli_fetch_array($result))
+                            {
+                                $about_assignment = $row['about_assignment'];
+                                echo '<tr>
+                                    <td>'.$about_assignment.'</td>
+                                    <td>'.$row["grade"].'</td>
+                                </tr>';
+                                                                              
+                            }
+                            echo '<tr>';
+                            echo '</table><br><br><br>';
+                        }                                          
+                    ?>
+                </div>
+            </div>
+
             <!-- /.container-fluid -->
             <!-- /.container-fluid -->
             <!--footer class="footer text-center"> Footer </footer-->
